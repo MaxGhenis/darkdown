@@ -34,7 +34,7 @@ jobs:
             },
             "oauth2ClientSettings": {
               "clientId": "${{ secrets.CLIENT_ID }}",
-              "clientSecret": ""${{ secrets.CLIENT_SECRET }}",",
+              "clientSecret": "${{ secrets.CLIENT_SECRET }}",
               "redirectUri": "http://localhost"
             },
             "isLocalCreds": false
