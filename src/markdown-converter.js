@@ -5,19 +5,7 @@ function convertToMarkdownWithComments() {
   let listCounters = {};
   let currentPosition = 0;
   
-  // Get comments and build the index
-  const comments = getDocumentComments();
-  Logger.log('Total comments found:', comments.length);
-  
-  const bodyText = body.getText();
-  const commentIndex = buildCommentIndex(comments, bodyText);
-  Logger.log('Comments indexed:', commentIndex.length);
-  
-  // Map to store comment footnotes in order of appearance
-  const footnoteMap = new Map();
-  let footnoteCounter = 1;
-  
-  // Process each block element
+  // Process each block element in the document body
   for (let i = 0; i < body.getNumChildren(); i++) {
     const child = body.getChild(i);
     const type = child.getType();
@@ -32,48 +20,10 @@ function convertToMarkdownWithComments() {
         continue;
       }
       
+      // Convert text formatting using your existing function
       let processedText = processTextElement(para);
       
-      // Check if this is a header
-      const isHeader = heading !== DocumentApp.ParagraphHeading.NORMAL;
-      
-      // Get comments for this text
-      const relevantComments = getCommentsForText(
-        text, 
-        currentPosition, 
-        commentIndex,
-        isHeader
-      );
-      
-      if (relevantComments.length > 0) {
-        Logger.log('Found comments for text:', {
-          text: text.substring(0, 50) + '...',
-          isHeader: isHeader,
-          comments: relevantComments.map(c => ({
-            quote: c.quote,
-            isSection: c.isSection
-          }))
-        });
-        
-        // Add comment references in order of appearance
-        relevantComments.forEach(comment => {
-          // Generate unique ID for each comment
-          const commentId = `${comment.position}-${comment.quote}`;
-          
-          // Assign footnote number if not already assigned
-          if (!footnoteMap.has(commentId)) {
-            footnoteMap.set(commentId, {
-              number: footnoteCounter++,
-              comment: comment
-            });
-          }
-          
-          const footnoteNumber = footnoteMap.get(commentId).number;
-          processedText += ` [^${footnoteNumber}]`;
-        });
-      }
-      
-      // Handle different heading levels
+      // Handle headings
       if (heading === DocumentApp.ParagraphHeading.HEADING1) {
         markdown += '# ' + processedText + '\n\n';
       } else if (heading === DocumentApp.ParagraphHeading.HEADING2) {
@@ -100,36 +50,7 @@ function convertToMarkdownWithComments() {
       
       let processedText = processTextElement(listItem);
       
-      // Check for comments in list items
-      const relevantComments = getCommentsForText(
-        text, 
-        currentPosition, 
-        commentIndex,
-        false
-      );
-      
-      if (relevantComments.length > 0) {
-        Logger.log('Found comments for list item:', {
-          text: text.substring(0, 50) + '...',
-          comments: relevantComments.length
-        });
-        
-        // Add comment references in order
-        relevantComments.forEach(comment => {
-          const commentId = `${comment.position}-${comment.quote}`;
-          
-          if (!footnoteMap.has(commentId)) {
-            footnoteMap.set(commentId, {
-              number: footnoteCounter++,
-              comment: comment
-            });
-          }
-          
-          const footnoteNumber = footnoteMap.get(commentId).number;
-          processedText += ` [^${footnoteNumber}]`;
-        });
-      }
-      
+      // Format list items using numbering or bullets
       if (glyphType === DocumentApp.GlyphType.NUMBER) {
         if (!listCounters[nestLevel]) {
           listCounters[nestLevel] = 1;
@@ -142,22 +63,20 @@ function convertToMarkdownWithComments() {
       
       currentPosition += text.length + 1;
     }
-    // Skip other element types but account for their text in position tracking
+    // For other element types, attempt to account for their text length.
     else if (type !== DocumentApp.ElementType.UNSUPPORTED) {
       try {
         currentPosition += child.getText().length + 1;
       } catch (e) {
-        // Some elements might not support getText()
         Logger.log('Could not get text length for element type:', type);
       }
     }
   }
   
-  // Add comment footnotes
-  markdown += formatCommentFootnotes(footnoteMap);
+  // Append a section for comments by fetching their JSON representation.
+  markdown += '\n\n---\n\n### Comments\n\n';
+  markdown += getCommentContents(); // getCommentContents() should return a JSON string
   
   Logger.log('Generated markdown length:', markdown.length);
-  Logger.log('Footnotes map size:', footnoteMap.size);
-  
   return markdown;
 }
