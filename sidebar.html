@@ -94,13 +94,12 @@
   </head>
   <body>
     <header class="logo-container">
-      <!-- Use the GitHub raw URL so the logo is publicly accessible -->
       <img src="https://raw.githubusercontent.com/MaxGhenis/darkdown/main/logo.png" alt="Darkdown" class="logo">
     </header>
     <main>
+      <!-- Only one conversion button is displayed -->
       <div class="button-container">
         <button onclick="convertToMarkdown()">Markdown</button>
-        <button onclick="convertToHTML()">HTML</button>
       </div>
       <div class="options">
         <div class="checkbox-group">
@@ -109,32 +108,25 @@
             Preserve comments
           </label>
         </div>
-        <div class="checkbox-group">
-          <label>
-            <input type="checkbox" id="dark_theme_output">
-            Dark theme output
-          </label>
-        </div>
       </div>
       <textarea id="output" readonly placeholder="Converted text will appear here..."></textarea>
+      <!-- New Copy button -->
+      <div class="button-container">
+        <button id="copyBtn" onclick="copyOutput()">Copy to Clipboard</button>
+      </div>
     </main>
     <footer class="footer">
-      Made with ♥ by <a href="https://github.com/MaxGhenis/darkdown" target="_blank">Darkdown</a>
+      Made with &#10084; by <a href="https://github.com/MaxGhenis/darkdown" target="_blank">Darkdown</a>
     </footer>
     <script>
-      // Configuration object for conversion options
+      // Configuration object for conversion options (without darkThemeOutput)
       const config = {
-        preserveComments: false,
-        darkThemeOutput: false
+        preserveComments: false
       };
 
-      // Update configuration when checkboxes change
+      // Update configuration when the preserve comments checkbox changes
       document.getElementById('preserve_comments').addEventListener('change', (e) => {
         config.preserveComments = e.target.checked;
-      });
-
-      document.getElementById('dark_theme_output').addEventListener('change', (e) => {
-        config.darkThemeOutput = e.target.checked;
       });
 
       function convertToMarkdown() {
@@ -146,31 +138,34 @@
           .convertToMarkdown(config);
       }
 
-      function convertToHTML() {
-        const output = document.getElementById('output');
-        output.value = 'Converting to HTML...';
-        google.script.run
-          .withSuccessHandler(showResult)
-          .withFailureHandler(showError)
-          .convertToHTML(config);
-      }
-
       function showResult(result) {
         const output = document.getElementById('output');
         output.value = result;
-        // Automatically copy the result to clipboard
-        output.select();
-        document.execCommand('copy');
-        // Show temporary success message
-        const originalValue = output.value;
-        output.value = 'Copied to clipboard!';
-        setTimeout(() => {
-          output.value = originalValue;
-        }, 1000);
       }
 
       function showError(error) {
         document.getElementById('output').value = 'Error: ' + error;
+      }
+
+      // New copy-to-clipboard functionality
+      function copyOutput() {
+        const output = document.getElementById('output');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(output.value).then(() => {
+            const copyBtn = document.getElementById('copyBtn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => {
+              copyBtn.textContent = originalText;
+            }, 1000);
+          }).catch((err) => {
+            console.error('Failed to copy: ', err);
+          });
+        } else {
+          // Fallback for older browsers
+          output.select();
+          document.execCommand('copy');
+        }
       }
     </script>
   </body>
