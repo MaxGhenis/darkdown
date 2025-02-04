@@ -2,7 +2,7 @@ function getCommentContents() {
 
     var commentDetails = getCommentIds();
   
-    var commentString = getCommentDetailsWithReplies(commentDetails);
+    return getCommentDetailsWithReplies(commentDetails);
   
   }
   
