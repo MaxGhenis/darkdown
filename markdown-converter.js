@@ -1,4 +1,4 @@
-function convertToMarkdown() {
+function convertToMarkdownWithComments(config) {
   const doc = DocumentApp.getActiveDocument();
   const body = doc.getBody();
   let markdown = '';
@@ -16,11 +16,10 @@ function convertToMarkdown() {
       const text = para.getText();
       
       if (!text) {
-        currentPosition += 1; // Account for newline
+        currentPosition += 1;
         continue;
       }
       
-      // Convert text formatting using your existing function
       let processedText = processTextElement(para);
       
       // Handle headings
@@ -34,7 +33,7 @@ function convertToMarkdown() {
         markdown += processedText + '\n\n';
       }
       
-      currentPosition += text.length + 1; // +1 for newline
+      currentPosition += text.length + 1;
     } 
     else if (type === DocumentApp.ElementType.LIST_ITEM) {
       const listItem = child.asListItem();
@@ -73,9 +72,11 @@ function convertToMarkdown() {
     }
   }
   
-  // Append a section for comments by fetching their JSON representation.
-  markdown += '\n\n---\n\n### Comments\n\n';
-  markdown += getCommentContents(); // getCommentContents() should return a JSON string
+  // Append the comments section only if preserveComments is true.
+  if (config && config.preserveComments) {
+    markdown += '\n\n---\n\n### Comments\n\n';
+    markdown += getCommentContents(); // getCommentContents() returns a JSON string of comment details
+  }
   
   Logger.log('Generated markdown length:', markdown.length);
   return markdown;
