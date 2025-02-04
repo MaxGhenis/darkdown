@@ -12,5 +12,18 @@
     "https://www.googleapis.com/auth/documents.currentonly",
     "https://www.googleapis.com/auth/script.container.ui",
     "https://www.googleapis.com/auth/drive.readonly"
-  ]
+  ],
+  "addOns": {
+    "common": {
+      "name": "Darkdown",
+      "logoUrl": "https://raw.githubusercontent.com/MaxGhenis/darkdown/main/logo.png",
+      "useLocaleFromApp": true
+    },
+    "docs": {
+      "homepageTrigger": {
+        "runFunction": "showSidebar",
+        "enabled": true
+      }
+    }
+  }
 }
