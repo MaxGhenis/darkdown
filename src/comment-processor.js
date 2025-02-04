@@ -1,5 +1,3 @@
-// comment-processor.gs
-
 function buildCommentIndex(comments, bodyText) {
   const commentIndex = [];
   
