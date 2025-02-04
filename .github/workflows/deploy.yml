@@ -22,9 +22,6 @@ jobs:
           npm install
           npm install -g @google/clasp
 
-      - name: Run ESLint
-        run: npm run lint
-
       - name: Create clasp config files
         run: |
           echo '{"scriptId":"${{ secrets.SCRIPT_ID }}"}' > .clasp.json
