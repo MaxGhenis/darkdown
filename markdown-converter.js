@@ -1,4 +1,4 @@
-function convertToMarkdownWithComments() {
+function convertToMarkdown() {
   const doc = DocumentApp.getActiveDocument();
   const body = doc.getBody();
   let markdown = '';
