@@ -1,5 +1,3 @@
-// markdown-converter.gs
-
 function convertToMarkdownWithComments() {
   const doc = DocumentApp.getActiveDocument();
   const body = doc.getBody();

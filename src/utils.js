@@ -1,5 +1,3 @@
-// utils.gs - Basic utility functions
-
 function cleanHtmlContent(content) {
   if (!content) return '';
   return content

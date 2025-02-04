@@ -1,5 +1,3 @@
-// comments.gs
-
 function processCommentReplies(reply) {
   return {
     content: reply.content,

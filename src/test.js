@@ -1,5 +1,3 @@
-// test.gs
-
 function testMarkdownExport() {
   const markdown = convertToMarkdownWithComments();
   Logger.log('Generated markdown length:', markdown.length);

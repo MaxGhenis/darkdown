@@ -1,5 +1,3 @@
-// text-processing.gs
-
 function processTextElement(element) {
   let result = '';
   
