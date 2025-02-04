@@ -17,8 +17,10 @@ function getCommentContents() {
     };
   
     var response = UrlFetchApp.fetch(url, params);
-    var comments = JSON.parse(response.getContentText());
+    var responseText = response.getContentText();
+    Logger.log("Drive API response: " + responseText);
     
+    var comments = JSON.parse(responseText);
     if (!comments.items) {
       Logger.log("No comments found.");
       return [];
@@ -27,7 +29,7 @@ function getCommentContents() {
     var commentIds = comments.items.map(function(comment) {
       return comment.commentId;
     });
-  
+    
     Logger.log("Comment IDs: " + commentIds);
     return commentIds;
   }
