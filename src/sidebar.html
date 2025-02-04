@@ -2,84 +2,74 @@
 <html>
   <head>
     <base target="_blank">
+    <meta charset="UTF-8">
+    <title>Darkdown Sidebar</title>
     <style>
       body {
-        background: #1e1e1e;
+        background-color: #1e1e1e;
         color: #e0e0e0;
         font-family: Arial, sans-serif;
         padding: 12px;
         margin: 0;
       }
-      
       .logo-container {
         text-align: center;
         margin: 12px 0 20px;
       }
-      
       .logo {
         width: 64px;
         height: 64px;
       }
-
       .button-container {
         display: flex;
         gap: 8px;
         margin-bottom: 16px;
       }
-      
       button {
         flex: 1;
-        background: #2d2d2d;
+        background-color: #2d2d2d;
         border: 1px solid #404040;
         color: #e0e0e0;
         padding: 8px 16px;
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: background-color 0.2s, border-color 0.2s;
       }
-      
       button:hover {
-        background: #404040;
+        background-color: #404040;
         border-color: #505050;
       }
-      
       button.primary {
-        background: #0066cc;
+        background-color: #0066cc;
         border-color: #0077ee;
       }
-      
       button.primary:hover {
-        background: #0077ee;
+        background-color: #0077ee;
         border-color: #0088ff;
       }
-      
       .options {
-        background: #2d2d2d;
+        background-color: #2d2d2d;
         border: 1px solid #404040;
         border-radius: 4px;
         padding: 12px;
         margin-bottom: 16px;
       }
-      
       .checkbox-group {
         margin-bottom: 8px;
       }
-      
       label {
         display: flex;
         align-items: center;
         gap: 8px;
         cursor: pointer;
       }
-      
       input[type="checkbox"] {
         cursor: pointer;
       }
-
       textarea {
         width: 100%;
         height: 200px;
-        background: #2d2d2d;
+        background-color: #2d2d2d;
         color: #e0e0e0;
         border: 1px solid #404040;
         border-radius: 4px;
@@ -88,63 +78,57 @@
         resize: vertical;
         margin-bottom: 12px;
       }
-
       .footer {
         font-size: 12px;
         text-align: center;
         color: #808080;
       }
-
       .footer a {
         color: #0077ee;
         text-decoration: none;
       }
-
       .footer a:hover {
         text-decoration: underline;
       }
     </style>
   </head>
   <body>
-    <div class="logo-container">
-      <img src="data:image/png;base64,INSERT_BASE64_LOGO_HERE" alt="Darkdown" class="logo">
-    </div>
-    
-    <div class="button-container">
-      <button onclick="convertToMarkdown()">Markdown</button>
-      <button onclick="convertToHTML()">HTML</button>
-    </div>
-
-    <div class="options">
-      <div class="checkbox-group">
-        <label>
-          <input type="checkbox" id="preserve_comments">
-          Preserve comments
-        </label>
+    <header class="logo-container">
+      <!-- Use the GitHub raw URL so the logo is publicly accessible -->
+      <img src="https://raw.githubusercontent.com/MaxGhenis/darkdown/main/logo.png" alt="Darkdown" class="logo">
+    </header>
+    <main>
+      <div class="button-container">
+        <button onclick="convertToMarkdown()">Markdown</button>
+        <button onclick="convertToHTML()">HTML</button>
       </div>
-
-      <div class="checkbox-group">
-        <label>
-          <input type="checkbox" id="dark_theme_output">
-          Dark theme output
-        </label>
+      <div class="options">
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" id="preserve_comments">
+            Preserve comments
+          </label>
+        </div>
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" id="dark_theme_output">
+            Dark theme output
+          </label>
+        </div>
       </div>
-    </div>
-
-    <textarea id="output" readonly placeholder="Converted text will appear here..."></textarea>
-
-    <div class="footer">
-      Made with ♥ by <a href="https://github.com/MaxGhenis/darkdown">Darkdown</a>
-    </div>
-
+      <textarea id="output" readonly placeholder="Converted text will appear here..."></textarea>
+    </main>
+    <footer class="footer">
+      Made with ♥ by <a href="https://github.com/MaxGhenis/darkdown" target="_blank">Darkdown</a>
+    </footer>
     <script>
       // Configuration object for conversion options
-      let config = {
+      const config = {
         preserveComments: false,
         darkThemeOutput: false
       };
 
-      // Update config when checkboxes change
+      // Update configuration when checkboxes change
       document.getElementById('preserve_comments').addEventListener('change', (e) => {
         config.preserveComments = e.target.checked;
       });
@@ -156,7 +140,6 @@
       function convertToMarkdown() {
         const output = document.getElementById('output');
         output.value = 'Converting to Markdown...';
-        
         google.script.run
           .withSuccessHandler(showResult)
           .withFailureHandler(showError)
@@ -166,7 +149,6 @@
       function convertToHTML() {
         const output = document.getElementById('output');
         output.value = 'Converting to HTML...';
-        
         google.script.run
           .withSuccessHandler(showResult)
           .withFailureHandler(showError)
@@ -176,11 +158,9 @@
       function showResult(result) {
         const output = document.getElementById('output');
         output.value = result;
-        
-        // Copy to clipboard
+        // Automatically copy the result to clipboard
         output.select();
         document.execCommand('copy');
-        
         // Show temporary success message
         const originalValue = output.value;
         output.value = 'Copied to clipboard!';
@@ -190,8 +170,7 @@
       }
 
       function showError(error) {
-        const output = document.getElementById('output');
-        output.value = 'Error: ' + error;
+        document.getElementById('output').value = 'Error: ' + error;
       }
     </script>
   </body>
