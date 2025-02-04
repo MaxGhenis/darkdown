@@ -1,6 +1,9 @@
 {
   "timeZone": "America/New_York",
   "runtimeVersion": "V8",
+  "urlFetchWhitelist": [
+    "https://www.googleapis.com/"
+  ],
   "dependencies": {
     "enabledAdvancedServices": [{
       "userSymbol": "Drive",
@@ -12,8 +15,8 @@
     "https://www.googleapis.com/auth/documents.currentonly",
     "https://www.googleapis.com/auth/script.container.ui",
     "https://www.googleapis.com/auth/drive.readonly",
-    "https://www.googleapis.com/auth/script.locale",
-    "https://www.googleapis.com/auth/script.external_request"
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/script.locale"
   ],
   "addOns": {
     "common": {
