@@ -1,110 +1,80 @@
 # Darkdown
 
-A fresh, modern Google Docs to Markdown converter that preserves the conversation, not just the content.
+Google Docs to Markdown with comments — MCP server, CLI, and Google Workspace add-on.
 
 ## Overview
 
-Darkdown transforms Google Docs into clean Markdown while keeping what other converters lose - the collaborative discussion that happens in comments and threads. Built on solid ground but reimagined for modern docs workflow.
+Darkdown gives you programmatic access to any Google Doc as clean Markdown with full comment context. Unlike Google's native markdown export, darkdown preserves comment threads with anchor text — the actual text each comment is attached to.
 
-## Key Features
+## Features
 
-- Export docs to clean, readable Markdown
-- Keep comment threads as Markdown footnotes or HTML annotations
-- Convert all the usual suspects: headings, lists, tables, code blocks
-- Dark-mode friendly UI (because of course)
-- Free and open source forever
-- Just works - no accounts or signups
-
-## Technical Details
-
-Built using:
-
-- Google Apps Script + Drive API for the heavy lifting
-- Modern JavaScript because it's 2024
-- GitHub Actions for smooth deployments
-- Testing that actually tests things
-
-Improvements over existing tools:
-
-- Preserves the full conversation with comment threads
-- Modern build process and deployment
-- Actually maintained
-- Clean code you won't hate reading
+- Convert Google Docs to clean Markdown (headings, lists, tables, inline formatting)
+- Preserve comment threads with anchor text context
+- Inline footnote-style or appendix-style comment placement
+- MCP server for Claude Code integration
+- CLI for scripts and terminal use
+- Google Workspace add-on for in-browser use
 
 ## Installation
 
-1. Visit [Darkdown](https://workspace.google.com/marketplace/app/darkdown/id) in the Google Workspace Marketplace
-2. Click "Install"
-3. Open any Google Doc
-4. Look for the fancy new Darkdown menu
+```bash
+# Clone and install
+git clone https://github.com/MaxGhenis/darkdown.git
+cd darkdown
+uv sync
+```
+
+Requires a Google OAuth token at `~/.config/policyengine/google-token-policyengine.json` with `drive` and `documents` scopes.
 
 ## Usage
 
-1. Open a doc
-2. Click "Darkdown" in your add-ons menu
-3. Pick Markdown or HTML
-4. Toggle comment preservation on/off
-5. Hit export and you're done
+### CLI
 
-## Permissions
+```bash
+# Read a doc as markdown with inline comments
+darkdown read DOC_ID_OR_URL
 
-We need to:
+# Appendix-style comments
+darkdown read DOC_ID --comment-mode appendix
 
-- Read your current doc (for conversion)
-- See comments (if you want them exported)
-- Show our UI
+# Without comments
+darkdown read DOC_ID --no-comments
 
-We don't need to:
+# Save to file
+darkdown read DOC_ID -o output.md
 
-- Access any other docs
-- Modify anything
-- Know anything about you
+# List just the comments
+darkdown comments DOC_ID
 
-## Privacy
+# Get doc metadata
+darkdown metadata DOC_ID
+```
 
-- No tracking
-- No servers
-- No accounts
-- Code's all public
+### MCP server (Claude Code)
+
+Register in your Claude Code config:
+
+```bash
+claude mcp add -s user darkdown uv --directory ~/darkdown run mcp run darkdown.mcp_server:mcp
+```
+
+Three tools available:
+- **`read_doc`** — Full doc as markdown with comments
+- **`list_comments`** — Just comments with anchor text
+- **`doc_metadata`** — Title, owner, last modified
+
+### Google Workspace add-on
+
+The legacy add-on is in `apps-script/`. See the [Workspace Marketplace](https://workspace.google.com/marketplace) for installation.
 
 ## Development
 
-Want to help?
-
-1. Fork it
-2. Install clasp
-3. Make it better
-4. Send a PR
-
-See CONTRIBUTING.md for the details.
+```bash
+uv sync --extra dev
+uv run pytest -v          # 55 tests
+uv run ruff check src/    # lint
+```
 
 ## License
 
-Apache 2.0 - Keeping it consistent with gd2md-html's license.
-
-## Credits
-
-- Built on the shoulders of [gd2md-html](https://github.com/evbacher/gd2md-html)
-- Driven by user feedback
-- Made possible by open source
-
-## Support
-
-- Issues welcome on GitHub
-- PRs even more welcome
-- No formal support - we're all friends here
-
-## Limitations
-
-- Can't convert Google Drawings (API limitation)
-- Some complex tables might need cleanup
-- Math equations need manual LaTeX conversion
-- Subject to Google's quotas
-
-## Future Plans
-
-- Better table handling
-- Math equation support
-- More formatting options
-- Smarter comment positioning
-- Dark mode everything
+Apache 2.0
